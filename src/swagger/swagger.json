@@ -1,0 +1,384 @@
+{
+	"openapi": "3.0.0",
+	"info": {
+		"title": "API Twitter Clone",
+		"description": "API clone of Twitter",
+		"contact": {
+			"email": "deejaymarshall@msn.com",
+			"author": "Deejay Marshall"
+		},
+		"version": "1.0.0"
+	},
+	"servers": [
+		{
+			"url": "https://bluetwitterclone.herokuapp.com",
+			"description": "API running on Render"
+		},
+		{
+			"url": "http://localhost:5000",
+			"description": "API running locally"
+		}
+	],
+	"paths": {
+		"/users/new-user": {
+			"post": {
+				"summary": "Creates a new user",
+				"description": "Route to add a new user",
+				"tags": ["Users"],
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/User"
+							},
+							"examples": {
+								"Users": {
+									"value": {
+										"name": "Slag Brothers",
+										"username": "Rock Slag",
+										"email": "slag@gmail.com",
+										"password": "12345",
+										"avatar": "https://arteemminiaturas.com.br/webapps/imagefile/arquivos/corrida-maluca-1-irm%C3%A3os-rocha-carro-de-pedra-the-slag-brothers-19558-02.jpg"
+									}
+								}
+							}
+						}
+					}
+				},
+				"responses": {
+					"400": {
+						"description": "Not Found"
+					},
+					"201": {
+						"description": "Created",
+						"content": {
+							"application/json": {
+								"schemma": {
+									"type": "object",
+									"$ref": "#/components/schemas/User"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/users": {
+			"get": {
+				"summary": "Get all users",
+				"description": "Route to get all users",
+				"tags": ["Users"],
+				"responses": {
+					"400": {
+						"description": "Not Found"
+					},
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "#/components/schemas/User"
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/auth/login": {
+			"post": {
+				"summary": "Login into Twitter",
+				"description": "Route to login into Twitter",
+				"tags": ["Auth"],
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/User"
+							},
+							"examples": {
+								"User": {
+									"value": {
+										"email": "slag@gmail.com",
+										"password": "12345"
+									}
+								}
+							}
+						}
+					}
+				},
+				"responses": {
+					"400": {
+						"description": "Not Found"
+					},
+					"200": {
+						"description": "OK"
+					}
+				}
+			}
+		},
+		"/tweets/create": {
+			"post": {
+				"summary": "Tweets",
+				"description": "Route to post a tweet",
+				"tags": ["Tweet"],
+				"security": [{ "bearerAuth": [] }],
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/Tweet"
+							},
+							"examples": {
+								"Tweet": {
+									"value": {
+										"user": "",
+										"message": "Tweet test using swagger",
+										"likes": [],
+										"comments": [],
+										"retweets": []
+									}
+								}
+							}
+						}
+					}
+				},
+				"responses": {
+					"401": {
+						"description": "Unauthorized"
+					},
+					"400": {
+						"description": "Not Found"
+					},
+					"201": {
+						"description": "Created",
+						"content": {
+							"application/json": {
+								"schemma": {
+									"type": "object",
+									"$ref": "#/components/schemas/Tweet"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/tweets": {
+			"get": {
+				"summary": "Get all tweets",
+				"description": "Route to get all tweets",
+				"tags": ["Tweet"],
+				"security": [{ "bearerAuth": [] }],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "limit",
+						"type": "string"
+					},
+					{
+						"in": "query",
+						"name": "offset",
+						"type": "string"
+					}
+				],
+				"responses": {
+					"401": {
+						"description": "Unauthorized"
+					},
+					"400": {
+						"description": "Not Found"
+					},
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "#/components/schemas/Tweet"
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/tweets/search": {
+			"get": {
+				"summary": "Search tweets by keyword",
+				"description": "Route to search tweets by keyword",
+				"tags": ["Tweet"],
+				"security": [{ "bearerAuth": [] }],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "message",
+						"type": "string",
+						"required": true
+					}
+				],
+				"responses": {
+					"401": {
+						"description": "Unauthorized"
+					},
+					"400": {
+						"description": "Not Found"
+					},
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "#/components/schemas/Tweet"
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/tweets/{id}/like": {
+			"patch": {
+				"summary": "Like a tweet",
+				"description": "Route to like a tweet",
+				"tags": ["Tweet"],
+				"security": [{ "bearerAuth": [] }],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"type": "string",
+						"description": "User ID who clicked on like",
+						"required": true
+					}
+				],
+				"responses": {
+					"401": {
+						"description": "Unauthorized"
+					},
+					"400": {
+						"description": "Not Found"
+					},
+					"200": {
+						"description": "OK"
+					}
+				}
+			}
+		},
+		"/tweets/{id}/comment": {
+			"patch": {
+				"summary": "Comment on a tweet",
+				"description": "Route to comment on a tweet",
+				"tags": ["Tweet"],
+				"security": [{ "bearerAuth": [] }],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"type": "string",
+						"description": "User ID who clicked on comment",
+						"required": true
+					}
+				],
+				"responses": {
+					"401": {
+						"description": "Unauthorized"
+					},
+					"400": {
+						"description": "Not Found"
+					},
+					"200": {
+						"description": "OK"
+					}
+				}
+			}
+		},
+		"/tweets/{id}/retweet": {
+			"patch": {
+				"summary": "Retweet a tweet",
+				"description": "Route to retweet a tweet",
+				"tags": ["Tweet"],
+				"security": [{ "bearerAuth": [] }],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"type": "string",
+						"description": "User ID retweeted",
+						"required": true
+					}
+				],
+				"responses": {
+					"401": {
+						"description": "Unauthorized"
+					},
+					"400": {
+						"description": "Not Found"
+					},
+					"200": {
+						"description": "OK"
+					}
+				}
+			}
+		}
+	},
+	"components": {
+		"securitySchemes": {
+			"bearerAuth": {
+				"type": "http",
+				"scheme": "bearer",
+				"bearerFormat": "JWT"
+			}
+		},
+		"schemas": {
+			"User": {
+				"type": "object",
+				"properties": {
+					"name": {
+						"type": "string"
+					},
+					"username": {
+						"type": "string"
+					},
+					"email": {
+						"type": "string"
+					},
+					"password": {
+						"type": "string"
+					},
+					"avatar": {
+						"type": "string"
+					}
+				}
+			},
+			"Tweet": {
+				"type": "object",
+				"properties": {
+					"user": {
+						"type": "string"
+					},
+					"message": {
+						"type": "string"
+					},
+					"likes": {
+						"type": "number"
+					},
+					"comments": {
+						"type": "number"
+					},
+					"retweets": {
+						"type": "number"
+					}
+				}
+			}
+		}
+	}
+}

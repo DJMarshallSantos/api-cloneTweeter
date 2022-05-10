@@ -6,6 +6,7 @@ const connectDB = require('./database/database');
 const userRoute = require('./users/users.routes')
 const authRoute = require('./auth/auth.routes');
 const tweetsRoute = require("./tweets/tweets.routes");
+const swaggerRoute = require("./swagger/swagger.routes");
 const port = process.env.PORT||5000;
 
 connectDB();
@@ -16,6 +17,7 @@ app.use(express.json());
 app.use('/users', userRoute);
 app.use('/auth', authRoute);
 app.use('/tweets', tweetsRoute);
+app.use('/api-docs', swaggerRoute);
 
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
